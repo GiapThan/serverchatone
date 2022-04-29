@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <%- include('../partials/head'); %>
+  </head>
+  <body class="container">
+
+    <header>
+      <%- include('../partials/head'); %>
+    </header>
+
+    <main>
+        <form method="post" action="/upimg" enctype="multipart/form-data">
+          <input type="file" name="img" id="img" accept="image/*"/>
+          <input type="submit">aaa</input>
+
+        </form>
+      
+      
+    </main>
+
+    <footer>
+      <%- include('../partials/footer'); %>
+    </footer>
+
+    <script>
+      const btn = document.getElementById('submit')
+      var fd = new FormData()
+
+      function handle() {
+        const imgtag = document.getElementById('img')
+        const image = (imgtag.files[0])
+        console.log(image)
+        fd.append('image', image)
+        console.log(fd)
+        fetch('https://api.imgur.com/3/image', {
+          method: "POST",
+          headers: {
+            Authorization: "Client-ID "
+          },
+          body: fd,
+        })
+          .then(e => console.log(e))
+          .catch()
+      }
+      /* function sen(fd) {
+        var xhttp = new XMLHttpRequest()
+
+        xhttp.open('POST', 'https://api.imgur.com/3/image', true)
+        xhttp.setRequestHeader('Authorization', 'Client-ID ' + '3f79d03cd657369');
+        xhttp.onreadystatechange = function (res) {
+          console.log(res)
+        }
+          xhttp.send(fd)
+          xhttp = null
+      } */
+    </script>
+
+  </body>
+</html>
