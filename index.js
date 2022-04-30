@@ -14,12 +14,18 @@ const listUser = []
 var part = {}
 var matran = {}
 
-app.get('/', (req, res) => {
-    res.send('oke uuu')
+app.use(express.urlencoded({
+    extended: false
+}))
+app.use(express.json())
+
+app.get('/123', (req, res) => {
+    console.log('123')
+    res.render('index')
 })
 
-app.post('/sendmail' ,(req,res) => {
-    console.log(req)
+app.post('/sendmail', (req,res) => {
+    console.log('1234578')
     res.send(req.body)
 })
 
