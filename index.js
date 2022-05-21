@@ -19,16 +19,6 @@ app.use(express.urlencoded({
 }))
 app.use(express.json())
 
-app.get('/123', (req, res) => {
-    console.log('123')
-    res.render('index')
-})
-
-app.post('/sendmail', (req,res) => {
-    console.log('1234578')
-    res.send(req.body)
-})
-
 app.get('/getuser', async (req, res) => {
     var wb = XLSX.utils.book_new()
     await ModelsUserName.find()
@@ -46,6 +36,7 @@ app.get('/getuser', async (req, res) => {
 ModelsUserName.find()
     .then(data => {
         data.map(e => listUser.push(e.user))
+        console.log(listUser)
     })
     .catch()
 
@@ -67,91 +58,76 @@ function CheckWin(matrancaro, hang, cot, key) {
     }
     if (d==5) {
         return "win"
-    } else {
-        d=0
-        hang = h
-        cot = c
-    }
-//
+    } 
+    cot = c-1
     while (hang>=0 && cot>=0 && matrancaro[hang][cot] == key) {
         d+=1
         cot-=1
     }
     if (d==5) {
         return "win"
-    }else {
-        d=0
-        hang = h
-        cot = c
     }
+
 //
-    while (hang>=0 && cot>=0 && matrancaro[hang][cot] == key) {
-        d+=1
-        hang-=1
-    }
-    if (d==5) {
-        return "win"
-    }else {
-        d=0
-        hang = h
-        cot = c
-    }
-//
+    var d = 0
+    var hang = h
+    var cot = c
     while (hang>=0 && cot>=0 && matrancaro[hang][cot] == key) {
         d+=1
         hang+=1
     }
     if (d==5) {
         return "win"
-    }else {
-        d=0
-        hang = h
-        cot = c
-    }
-//
+    } 
+    hang = h-1
     while (hang>=0 && cot>=0 && matrancaro[hang][cot] == key) {
         d+=1
+        hang-=1
+    }
+    if (d==5) {
+        return "win"
+    }
+
+//
+    var d = 0
+    var hang = h
+    var cot = c
+    while (hang>=0 && cot>=0 && matrancaro[hang][cot] == key) {
+        d+=1
+        hang+=1
         cot+=1
-        hang+=1
     }
     if (d==5) {
         return "win"
-    }else {
-        d=0
-        hang = h
-        cot = c
-    }
-//
+    } 
+    hang = h-1
+    cot = c-1
     while (hang>=0 && cot>=0 && matrancaro[hang][cot] == key) {
         d+=1
-        cot-=1
         hang-=1
-    }
-    if (d==5) {
-        return "win"
-    }else {
-        d=0
-        hang = h
-        cot = c
-    }
-//
-    while (hang>=0 && cot>=0 && matrancaro[hang][cot] == key) {
-        d+=1
         cot-=1
-        hang+=1
     }
     if (d==5) {
         return "win"
-    }else {
-        d=0
-        hang = h
-        cot = c
     }
 //
+    var d = 0
+    var hang = h
+    var cot = c
     while (hang>=0 && cot>=0 && matrancaro[hang][cot] == key) {
         d+=1
+        hang+=1
+        cot-=1
+    }
+    if (d==5) {
+        return "win"
+    } 
+    hang = h-1
+    cot = c+1
+    while (hang>=0 && cot>=0 && matrancaro[hang][cot] == key) {
+        d+=1
+        hang-=1
         cot+=1
-        hang-=1
     }
     if (d==5) {
         return "win"
@@ -163,34 +139,46 @@ function CheckWin(matrancaro, hang, cot, key) {
 socketIo.on('connection', socket => {
      
     socket.on("login", data => {
-        
-        ModelsUserName.findOne({ user: data[0] })
+        console.log(1, data)
+        ModelsUserName.findOne({ user: data.user })
         .then(e => {
-            if (e.pass == data[1]) {
-                socket.UserName = data[0]
+            console.log(e)
+            if (e.pass == data.pass) {
+                socket.UserName = data.user
                 socket.emit("server-send-dang-nhap-thanh-cong", data)
+            }
+            else {
+                console.log('sai passs')
             }
         })
         .catch()
     })
     
     socket.on("client-send-user-name", (data) => {
-        
+        console.log(data)
         if (data.pass == '') {
+            console.log(1)
             if (listUser.includes(data.user)) {
-                socket.emit("server-nhap-pass")
+            console.log(2)
+            socket.emit("server-nhap-pass")
             }
             else {
-                
                 socket.emit("server-send-dang-ky")
+            console.log(3)
+
             }
         }
         else {
             ModelsUserName.findOne({user: data.user})
             .then(e => {
+            console.log(e)
+
                 if (e.pass == data.pass) {
                     socket.UserName = data.user
                     socket.emit("server-send-dang-nhap-thanh-cong", data)
+                }
+                else {
+                    socket.emit("sai-pass")
                 }
             })
             .catch()
@@ -198,6 +186,7 @@ socketIo.on('connection', socket => {
     })
     
     socket.on("client-send-pass-dang-ki", data => {
+        console.log(data)
         
         ModelsUserName.create({
             ...data,
