@@ -8,6 +8,7 @@ const server = require('http').createServer(app)
 const socket = require('./socket').start(server)
 
 const db = require('./config/db')
+const { modelName } = require('./config/models/UserName')
 db.connect()
 
 app.use(express.urlencoded({
@@ -17,7 +18,7 @@ app.use(express.json())
 
 app.get('/getuser', async (req, res) => {
     var wb = XLSX.utils.book_new()
-    await ModelsUserName.find()
+    await modelName.find()
         .then(data => {
             var temp = JSON.parse(JSON.stringify(data))
             var ws = XLSX.utils.json_to_sheet(temp)
