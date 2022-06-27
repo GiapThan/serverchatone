@@ -40,15 +40,13 @@ app.get('/getuser', async (req, res) => {
 const schedule = require('node-schedule');
 const request = require('request')
 
-const job = schedule.scheduleJob('* 20 * * * *', function(){
-  request("https://shopping-online-withme.herokuapp.com/acdm/keepserver",
-    (req)=>{
-        console.log(req)
+const job = schedule.scheduleJob('*/20 * * * *', function(){
+   request("https://shopping-online-withme.herokuapp.com/acdm/keepserver", {},
+    (err ,res) => {
+        console.log(res.body)
     }
     )
 })
-job.job()
-
 
 server.listen(process.env.PORT || 3050, () => {
     console.log('start successfully')
