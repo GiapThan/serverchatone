@@ -36,15 +36,16 @@ app.get('/getuser', async (req, res) => {
     res.download(down)
 })
 
-
-const schedule = require('node-schedule');
+const schedule = require('node-schedule')
 const request = require('request')
 
-const job = schedule.scheduleJob('*/20 * * * *', function(){
-   request("https://shopping-online-withme.herokuapp.com/acdm/keepserver", {},
-    (err ,res) => {
-        console.log(res.body)
-    }
+const job = schedule.scheduleJob('*/20 * * * *', function () {
+    request(
+        'https://shopping-online-withme.herokuapp.com/acdm/keepserver',
+        {},
+        (err, res) => {
+            console.log(res.body)
+        },
     )
 })
 

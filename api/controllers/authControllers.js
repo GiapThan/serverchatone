@@ -1,6 +1,8 @@
 const Account = require('../../config/models/Account')
 const bcrypt = require('bcrypt')
 
+const schedule = require('node-schedule')
+
 class AuthController {
     // Đăng ký
     async sign(req, res) {
@@ -21,6 +23,20 @@ class AuthController {
 
     index(req, res) {
         console.log('1231232')
+    }
+
+    test(req, res) {
+        const param = req.params
+        const current = new Date()
+        const date = new Date(
+            `${current.getUTCFullYear()}/${param.m}/${param.d} ${param.h}:${
+                param.p
+            }:00 +0700`,
+        )
+        const job = schedule.scheduleJob(date, () => {
+            res.send('ppp')
+        })
+        res.send('ok')
     }
 }
 
